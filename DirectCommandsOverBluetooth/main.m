@@ -38,7 +38,8 @@
     buffer[ [data length]+2]  = 13;
     buffer[ [data length]+3]  = 10;
     // Synchronously write the data to the channel.
-    [rfcommChannel writeSync:&buffer length:[data length]+4];
+    IOReturn ret = [rfcommChannel writeSync:&buffer length:[data length]+4];
+    NSLog(@"IORetrun = %d", ret);
 }
 
 - (void)rfcommChannelData:(IOBluetoothRFCOMMChannel*)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength
@@ -50,6 +51,7 @@
 {
     NSLog(@"%d : Channel Open Complete %p %d",[rfcommChannel getChannelID],rfcommChannel,error);
     NSLog(@"rfcommChannelOpenComplete");
+    [self sendData:@"0f0000008000009401810282e80382e803" toChannel:rfcommChannel];
 }
 
 - (void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel*)rfcommChannel
